@@ -60,8 +60,8 @@ cutoff_factor = 0.05
 cutoff_before = before_sample.mean() + cutoff_factor * before_sample.std()
 cutoff_after = after_sample.mean() + cutoff_factor * after_sample.std()
 
-# Calculate upper partial moments function
-def upper_partial_moment(data, cutoff):
+# Calculate 
+def upm(data, cutoff):
     # Only consider values above cutoff
     pos_dev = data[data > cutoff] - cutoff
     # Sort for step plot
@@ -71,18 +71,18 @@ def upper_partial_moment(data, cutoff):
     cumsum = np.cumsum(sorted_dev) / np.sum(sorted_dev)  # Normalize cumulative sum
     return sorted_dev, cumsum
 
-b_up_x, b_up_cum = upper_partial_moment(before_sample, cutoff_before)
-a_up_x, a_up_cum = upper_partial_moment(after_sample, cutoff_after)
+b_up_x, b_up_cum = upm(before_sample, cutoff_before)
+a_up_x, a_up_cum = upm(after_sample, cutoff_after)
 
-# Plot upper partial moment comparison
+# Plot truncated cdf comparison
 plt.figure(figsize=(10,6))
 if len(b_up_x) > 0:
-    plt.step(b_up_x, b_up_cum, label='Upper Partial Moment Before 2020 Break', where='post')
+    plt.step(b_up_x, b_up_cum, label='Truncated CDF Before 2020 Break', where='post')
 if len(a_up_x) > 0:
-    plt.step(a_up_x, a_up_cum, label='Upper Partial Moment After 2020 Break', where='post')
-plt.title('Upper Partial Moments Comparison Before and After 2020 Break')
+    plt.step(a_up_x, a_up_cum, label='Truncated CDF After 2020 Break', where='post')
+plt.title('Comparison Before and After 2020 Break')
 plt.xlabel('Excess Value Above Cutoff')
-plt.ylabel('Normalized Cumulative Sum (Partial Moment)')
+plt.ylabel('Normalized Cumulative Sum')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
@@ -92,3 +92,4 @@ print("Number of detected break points:", len(break_points))
 print("Known 2020 break detected at index:", known_break_index)
 print("Cutoff before break:", cutoff_before)
 print("Cutoff after break:", cutoff_after)
+
